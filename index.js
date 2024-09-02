@@ -15,6 +15,9 @@ const cors = require("cors");
 
 app.use(cors({origin: true}));
 
+// Create a reference to the Firestore database
+const db = admin.firestore();
+
 // Routes
 app.get("/", (req, res) => {
   res.status(200).send("Hello from Lively Campus");
@@ -28,7 +31,7 @@ app.get("/hello-world", (req, res) => {
 app.post("/events", async (req, res) => {
   try {
     const {title, description, date, location, organizer} = req.body;
-    const eventRef = await admin.firestore().collection("events").add({
+    const eventRef = await db.collection("events").add({
       title,
       description,
       date,
@@ -44,7 +47,7 @@ app.post("/events", async (req, res) => {
 // Retrieve all events
 app.get("/events", async (req, res) => {
   try {
-    const eventsSnapshot = await admin.firestore().collection("events").get();
+    const eventsSnapshot = await db.collection("events").get();
     const events = eventsSnapshot.docs.map((doc) => ({id: doc.id, ...doc.data()}));
     res.status(200).json(events);
   } catch (error) {
@@ -55,7 +58,7 @@ app.get("/events", async (req, res) => {
 // Get details of a specific event
 app.get("/events/:eventId", async (req, res) => {
   try {
-    const eventDoc = await admin.firestore().collection("events").doc(req.params.eventId).get();
+    const eventDoc = await db.collection("events").doc(req.params.eventId).get();
     if (!eventDoc.exists) {
       res.status(404).json({error: "Event not found"});
     } else {
@@ -70,7 +73,7 @@ app.get("/events/:eventId", async (req, res) => {
 app.put("/events/:eventId", async (req, res) => {
   try {
     const {title, description, date, location} = req.body;
-    await admin.firestore().collection("events").doc(req.params.eventId).update({
+    await db.collection("events").doc(req.params.eventId).update({
       title,
       description,
       date,
@@ -85,7 +88,7 @@ app.put("/events/:eventId", async (req, res) => {
 // Delete an event
 app.delete("/events/:eventId", async (req, res) => {
   try {
-    await admin.firestore().collection("events").doc(req.params.eventId).delete();
+    await db.collection("events").doc(req.params.eventId).delete();
     res.status(204).send();
   } catch (error) {
     res.status(500).json({error: "Failed to delete event"});
@@ -95,7 +98,7 @@ app.delete("/events/:eventId", async (req, res) => {
 // Get notifications for event changes
 app.get("/notifications", async (req, res) => {
   try {
-    const notificationsSnapshot = await admin.firestore().collection("notifications").get();
+    const notificationsSnapshot = await db.collection("notifications").get();
     const notifications = notificationsSnapshot.docs.map((doc) => ({id: doc.id, ...doc.data()}));
     res.status(200).json(notifications);
   } catch (error) {
@@ -104,7 +107,6 @@ app.get("/notifications", async (req, res) => {
 });
 
 app.get("/test", (req, res) => {
-  const db = admin.firestore();
   const test = db.collection("test");
   test
       .get()

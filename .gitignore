@@ -1,3 +1,5 @@
 node_modules/
 *.local
 permissions.json
+firebase-debug.json
+ui-debug.json
