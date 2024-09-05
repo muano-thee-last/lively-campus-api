@@ -1,3 +1,5 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable camelcase */
 /* eslint-disable max-len */
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
@@ -33,13 +35,8 @@ app.get("/hello-world", (req, res) => {
 // Create a new event (Backwards Compatible)
 app.post("/events", async (req, res) => {
   try {
-<<<<<<< HEAD
     const {
       organizerId,
-=======
-    const {title, description, date, location, organizer} = req.body;
-    const eventRef = await db.collection("events").add({
->>>>>>> 2ef0208cc8dedd49058c93d60a8f7b90d666970a
       title,
       description,
       ticketPrice,
@@ -111,7 +108,6 @@ app.get("/events/:eventId", async (req, res) => {
 // Update event details (Add notification for updates)
 app.put("/events/:eventId", async (req, res) => {
   try {
-<<<<<<< HEAD
     const {title, description, date, location, imageUrl} = req.body;
 
     const updateData = {};
@@ -149,25 +145,14 @@ app.put("/events/:eventId", async (req, res) => {
       });
     }
 
-=======
-    const {title, description, date, location} = req.body;
-    await db.collection("events").doc(req.params.eventId).update({
-      title,
-      description,
-      date,
-      location,
-    });
->>>>>>> 2ef0208cc8dedd49058c93d60a8f7b90d666970a
     res.status(200).json({message: "Event updated successfully"});
   } catch (error) {
     res.status(500).json({error: "Failed to update event"});
   }
 });
-
 // Delete an event (Unchanged)
 app.delete("/events/:eventId", async (req, res) => {
   try {
-<<<<<<< HEAD
     const eventDoc = await admin.firestore().collection("events").doc(req.params.eventId).get();
 
     if (eventDoc.exists) {
@@ -186,10 +171,6 @@ app.delete("/events/:eventId", async (req, res) => {
     } else {
       res.status(404).json({error: "Event not found"});
     }
-=======
-    await db.collection("events").doc(req.params.eventId).delete();
-    res.status(204).send();
->>>>>>> 2ef0208cc8dedd49058c93d60a8f7b90d666970a
   } catch (error) {
     res.status(500).json({error: "Failed to delete event"});
   }
@@ -206,7 +187,6 @@ app.get("/notifications", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // User-related routes (Unchanged)
 app.get("/verifyUserEmail", async (req, res) => {
   const {email} = req.query;
@@ -228,20 +208,6 @@ app.get("/verifyUserEmail", async (req, res) => {
   } catch (error) {
     return res.status(500).json({message: "Internal Server Error"});
   }
-=======
-app.get("/test", (req, res) => {
-  const test = db.collection("test");
-  test
-      .get()
-      .then((data) => {
-        const testData = [];
-        data.forEach((doc) => {
-          testData.push(doc.data());
-        });
-        return res.json(testData);
-      })
-      .catch((err) => console.error(err));
->>>>>>> 2ef0208cc8dedd49058c93d60a8f7b90d666970a
 });
 
 app.post("/users", async (req, res) => {
